@@ -46,6 +46,11 @@ public class SlotMachineController : MonoBehaviour
     // Shake intensity
     public float shakeAmount = 0.03f;
 
+    [Header("Audio")]
+
+    // Audio manager reference
+    public AudioManager audioManager;
+
     // Current selected bet amount
     private int currentBet;
 
@@ -74,6 +79,9 @@ public class SlotMachineController : MonoBehaviour
     public void EnterGame()
     {
         startPanel.SetActive(false);
+
+        // Stop intro loop sound
+        audioManager.StopLoopSound();
     }
 
     // Update money UI text
@@ -112,6 +120,9 @@ public class SlotMachineController : MonoBehaviour
 
             messageText.text = "";
 
+            // Play click sound
+            audioManager.PlayClickSound();
+
             // Hide popup during spin
             betPopup.SetActive(false);
 
@@ -140,6 +151,9 @@ public class SlotMachineController : MonoBehaviour
         // Start machine shake
         StartCoroutine(ShakeMachine(3f));
 
+        // Start reel sound
+        audioManager.StartReelSound();
+
         // Start spinning reels
         reel1.StartSpin();
         reel2.StartSpin();
@@ -157,6 +171,9 @@ public class SlotMachineController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         reel3.StopSpin();
+
+        // Stop reel sound
+        audioManager.StopReelSound();
 
         yield return new WaitForSeconds(1f);
 
@@ -252,6 +269,9 @@ public class SlotMachineController : MonoBehaviour
     // Exit game button
     public void ExitGame()
     {
+        // Play click sound
+        audioManager.PlayClickSound();
+
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
